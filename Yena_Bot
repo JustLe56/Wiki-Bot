@@ -27,11 +27,12 @@ async def wikiSum(ctx,userInput):
 async def wikiPic(ctx,userInput):
     try:
           picFind = wikipedia.page(userInput)
+          await ctx.send("Picture from: <{}>".format(picFind.url))
           await ctx.send(picFind.images[0])
 
     except wikipedia.exceptions.DisambiguationError as e:
             await ctx.send(format(("Error: {0}".format(e))))
-            await ctx.send("Error: too many results, please try again with more details.")
+            await ctx.send("Please try again with more details.")
 
 #@client.event
 #async def on_message(message):
