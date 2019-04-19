@@ -1,0 +1,45 @@
+
+import discord
+import wikipedia
+from discord.ext import commands
+
+client = commands.Bot(command_prefix = '!')
+
+@client.event
+async def on_ready():
+    print("I am alive")
+
+
+@client.command()
+async def ping(ctx):
+    await ctx.send('pong')
+
+
+@client.command()
+async def wikiSum(ctx,userInput):
+    try: #takes user input as arg and prints "4" lines of Wikipedia summary
+            await ctx.send(format(wikipedia.summary(userInput,sentences=4)))
+    except wikipedia.exceptions.DisambiguationError as e: #Disambiguation error message
+            await ctx.send(format(("Error: {0}".format(e))))
+            await ctx.send("Error: too many results, please try again with more details.")
+
+@client.command()
+async def wikiPic(ctx,userInput):
+    try:
+          picFind = wikipedia.page(userInput)
+          await ctx.send(picFind.images[0])
+
+    except wikipedia.exceptions.DisambiguationError as e:
+            await ctx.send(format(("Error: {0}".format(e))))
+            await ctx.send("Error: too many results, please try again with more details.")
+
+#@client.event
+#async def on_message(message):
+#    if message.author == client.user:#checks if message is not from the bot itself
+#        return
+
+#    if message.content.startswith('test'):
+#            await message.channel.send('Test')
+
+
+client.run('NTY4NjAzMjc2NTUyMDQ0NTU0.XLkgGQ.BgWi6DSV8NOVzrvp5Xmn3LVv1ww')
