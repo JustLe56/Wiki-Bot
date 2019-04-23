@@ -3,20 +3,20 @@ import discord
 import wikipedia
 from discord.ext import commands
 
-client = commands.Bot(command_prefix = '!')
+client = commands.Bot(command_prefix = '!') #creates prefix for all commands 
 
 @client.event
 async def on_ready():
-    print("I am alive")
+    print("I am alive") #displays in terminal when the bot is online
 
 
 @client.command()
-async def ping(ctx):
-    await ctx.send('pong')
+async def ping(ctx): #all commands take in context parameter(ctx) for information regarding message
+    await ctx.send('pong') #test bot ability to send and receive discord messages
 
 
 @client.command()
-async def wikiSum(ctx,userInput):
+async def wikiSum(ctx,userInput): #takes in string inputted in the same line as command as the topic to search for
     try: #takes user input as arg and prints "4" lines of Wikipedia summary
             await ctx.send(format(wikipedia.summary(userInput,sentences=4)))
     except wikipedia.exceptions.DisambiguationError as e: #Disambiguation error message
@@ -26,21 +26,14 @@ async def wikiSum(ctx,userInput):
 @client.command()
 async def wikiPic(ctx,userInput):
     try:
-          picFind = wikipedia.page(userInput)
-          await ctx.send("Picture from: <{}>".format(picFind.url))
-          await ctx.send(picFind.images[0])
+          picFind = wikipedia.page(userInput) #creates variable containing wikipedia page of userInput
+          await ctx.send("Picture from: <{}>".format(picFind.url)) #gives url of wikipedia page as context of the following image
+          await ctx.send(picFind.images[0]) #gives url of an image from wikipedia page
 
     except wikipedia.exceptions.DisambiguationError as e:
             await ctx.send(format(("Error: {0}".format(e))))
             await ctx.send("Please try again with more details.")
 
-#@client.event
-#async def on_message(message):
-#    if message.author == client.user:#checks if message is not from the bot itself
-#        return
-
-#    if message.content.startswith('test'):
-#            await message.channel.send('Test')
 
 
-client.run('NTY4NjAzMjc2NTUyMDQ0NTU0.XLkgGQ.BgWi6DSV8NOVzrvp5Xmn3LVv1ww')
+client.run('NTY4NjAzMjc2NTUyMDQ0NTU0.XLkgGQ.BgWi6DSV8NOVzrvp5Xmn3LVv1ww') #connects bot to discord server
