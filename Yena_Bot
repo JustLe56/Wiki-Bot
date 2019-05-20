@@ -1,4 +1,3 @@
-
 import discord
 import wikipedia
 from discord.ext import commands
@@ -33,6 +32,21 @@ async def wikiPic(ctx,userInput):
     except wikipedia.exceptions.DisambiguationError as e:
             await ctx.send(format(("Error: {0}".format(e))))
             await ctx.send("Please try again with more details.")
+
+@client.command()
+async def self(ctx):
+        commands={}
+        commands['!pong']='Tests the bot\'s response time'
+        commands['!self']='You just entered this command...'
+        commands['!wikiSum']='Gives Wikipedia summary of entered text'
+        commands['!wikiPic']='Gives Wikipedia picture of entered text'
+
+        msg=discord.Embed(title='Yena Bot Commands', description="Written by Day56#6042",color=0xf4bf42)
+
+        for command,description in commands.items():
+            msg.add_field(name=command,value=description, inline=False)
+            
+        await ctx.send(embed=msg)
 
 
 
