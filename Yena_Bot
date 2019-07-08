@@ -1,45 +1,23 @@
+
 import discord
 import wikipedia
 from discord.ext import commands
 
-client = commands.Bot(command_prefix = '!') #creates prefix for all commands 
+client = commands.Bot(command_prefix = '!')
 
 @client.event
 async def on_ready():
-    print("I am alive") #displays in terminal when the bot is online
-
-
-@client.command()
-async def ping(ctx): #all commands take in context parameter(ctx) for information regarding message
-    await ctx.send('pong') #test bot ability to send and receive discord messages
-
+    await client.change_presence(status=discord.Status.online,activity=discord.Game('!self for commands'))
+    print("Bot is online.")
 
 @client.command()
-async def wikiSum(ctx,userInput): #takes in string inputted in the same line as command as the topic to search for
-    try: #takes user input as arg and prints "4" lines of Wikipedia summary
-            await ctx.send(format(wikipedia.summary(userInput,sentences=4)))
-    except wikipedia.exceptions.DisambiguationError as e: #Disambiguation error message
-            await ctx.send(format(("Error: {0}".format(e))))
-            await ctx.send("Error: too many results, please try again with more details.")
-
-@client.command()
-async def wikiPic(ctx,userInput):
-    try:
-          picFind = wikipedia.page(userInput) #creates variable containing wikipedia page of userInput
-          await ctx.send("Picture from: <{}>".format(picFind.url)) #gives url of wikipedia page as context of the following image
-          await ctx.send(picFind.images[0]) #gives url of an image from wikipedia page
-
-    except wikipedia.exceptions.DisambiguationError as e:
-            await ctx.send(format(("Error: {0}".format(e))))
-            await ctx.send("Please try again with more details.")
-
-@client.command()
-async def self(ctx):
+async def self(ctx): #command !help gives list of all commands
         commands={}
-        commands['!pong']='Tests the bot\'s response time'
         commands['!self']='You just entered this command...'
+        commands['!ping']='Test the my response time'
         commands['!wikiSum']='Gives Wikipedia summary of entered text'
         commands['!wikiPic']='Gives Wikipedia picture of entered text'
+        commands['!clear']= 'Deletes a given number of messages (Default is 5)'
 
         msg=discord.Embed(title='Yena Bot Commands', description="Written by Day56#6042",color=0xf4bf42)
 
@@ -48,6 +26,31 @@ async def self(ctx):
             
         await ctx.send(embed=msg)
 
+@client.command()
+async def ping(ctx): #command !ping tests bot's response time
+    await ctx.send(f'Response time in: {round(client.latency * 1000)} ms')
 
+@client.command()
+async def wikiSum(ctx,userInput): #command !wikiSum gives wikipedia text summary
+    try: 
+            await ctx.send(format(wikipedia.summary(userInput,sentences=4)))
+    except wikipedia.exceptions.DisambiguationError as e: #Disambiguation error message
+            await ctx.send(format(("Error: {0}".format(e))))
+            await ctx.send("Error: too many results, please try again with more details.")
 
-client.run('NTY4NjAzMjc2NTUyMDQ0NTU0.XLkgGQ.BgWi6DSV8NOVzrvp5Xmn3LVv1ww') #connects bot to discord server
+@client.command() 
+async def wikiPic(ctx,userInput): #command !wikiPic gives wikipedia picture
+    try:
+          picFind = wikipedia.page(userInput)
+          await ctx.send("Picture from: <{}>".format(picFind.url))
+          await ctx.send(picFind.images[6])
+
+    except wikipedia.exceptions.DisambiguationError as e:
+            await ctx.send(format(("Error: {0}".format(e))))
+            await ctx.send("Please try again with more details.")
+
+@client.command()
+async def clear(ctx,amount=5):
+    await ctx.channel.purge(limit=amount)
+
+client.run('NTY4NjAzMjc2NTUyMDQ0NTU0.XLkgGQ.BgWi6DSV8NOVzrvp5Xmn3LVv1ww')
